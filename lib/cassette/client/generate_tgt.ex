@@ -7,13 +7,13 @@ defmodule Cassette.Client.GenerateTgt do
 
   alias Cassette.Config
   alias Cassette.Client
+  alias HTTPoison.Error
   alias HTTPoison.Response
 
   @type response ::
           {:error, :bad_credentials}
           | {:ok, String.t()}
-          | {:fail, pos_integer()}
-          | {:fail, :unknown}
+          | {:fail, term()}
 
   @spec process_headers([{String.t(), String.t()}]) :: %{String.t() => String.t()}
   defp process_headers(headers) do
@@ -41,6 +41,9 @@ defmodule Cassette.Client.GenerateTgt do
 
       {:ok, %Response{status_code: status_code}} ->
         {:fail, status_code}
+
+      {:error, %Error{reason: reason}} when is_atom(reason) ->
+        {:fail, reason}
 
       _ ->
         {:fail, :unknown}

@@ -62,7 +62,7 @@ defmodule Cassette.Server do
     GenServer.start_link(__MODULE__, {:ok, config})
   end
 
-  version(">= 1.5.0") do
+  version ">= 1.5.0" do
     def child_spec([name, config = %Config{}]) do
       defaults = %{id: name, start: {__MODULE__, :start_link, [name, config]}}
       Supervisor.child_spec(defaults, [])
@@ -178,6 +178,9 @@ defmodule Cassette.Server do
       {:fail, :unknown} ->
         {:reply, {:error, "Failed for unknown reason"}, state}
 
+      {:fail, reason} when is_atom(reason) ->
+        {:reply, {:error, "Failed because #{reason}"}, state}
+
       {:fail, status_code} ->
         {:reply, {:error, "Failed with status #{status_code}"}, state}
     end
@@ -236,6 +239,9 @@ defmodule Cassette.Server do
 
       {:fail, :unknown} ->
         {:error, "Failed for unknown reason"}
+
+      {:fail, reason} ->
+        {:error, "Failed because #{reason}"}
     end
   end
 

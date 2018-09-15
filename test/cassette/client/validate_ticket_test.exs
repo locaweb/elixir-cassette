@@ -11,16 +11,16 @@ defmodule Cassette.Client.ValidateTicketTest do
     {:ok, bypass: bypass, config: config, ticket: ticket, service: service}
   end
 
+  test "perform returns {:fail, reason} for atom failure reasons", %{bypass: bypass, config: config, ticket: ticket, service: service} do
+    Bypass.down(bypass)
+
+    assert {:fail, :econnrefused} = Cassette.Client.ValidateTicket.perform(config, ticket, service)
+  end
+
   test "perform returns {:fail, :unknown} for not-200 response", %{bypass: bypass, config: config, ticket: ticket, service: service} do
     Bypass.expect bypass, fn conn ->
       conn |> Plug.Conn.resp(404, "not found")
     end
-
-    assert {:fail, :unknown} = Cassette.Client.ValidateTicket.perform(config, ticket, service)
-  end
-
-  test "perform returns {:fail, :unknown} then http fails", %{bypass: bypass, config: config, ticket: ticket, service: service} do
-    Bypass.down(bypass)
 
     assert {:fail, :unknown} = Cassette.Client.ValidateTicket.perform(config, ticket, service)
   end

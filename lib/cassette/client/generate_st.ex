@@ -7,6 +7,8 @@ defmodule Cassette.Client.GenerateSt do
 
   alias Cassette.Config
   alias Cassette.Client
+  alias HTTPoison.Error
+  alias HTTPoison.Response
 
   @type response ::
           {:error, :bad_tgt}
@@ -26,14 +28,17 @@ defmodule Cassette.Client.GenerateSt do
     headers = []
 
     case post(url, params, headers, options) do
-      {:ok, %HTTPoison.Response{status_code: 404}} ->
+      {:ok, %Response{status_code: 404}} ->
         {:error, :bad_tgt}
 
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+      {:ok, %Response{status_code: 200, body: body}} ->
         {:ok, body}
 
-      {:ok, %HTTPoison.Response{status_code: status_code, body: body}} ->
+      {:ok, %Response{status_code: status_code, body: body}} ->
         {:fail, status_code, body}
+
+      {:error, %Error{reason: reason}} ->
+        {:fail, reason}
 
       _ ->
         {:fail, :unknown}

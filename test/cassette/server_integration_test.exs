@@ -19,7 +19,7 @@ defmodule Cassette.ServerIntegrationTest do
     assert {:ok, ^tgt} = Server.tgt(pid)
   end
 
-  test "fails with unknown reason when cas is down",
+  test "fails when cas is down",
     %{pid: pid, config: config} do
 
     {:ok, fake_cas_pid} = FakeCas.Server.start_link([])
@@ -28,7 +28,7 @@ defmodule Cassette.ServerIntegrationTest do
     :ok = Cassette.Server.reload(pid, config)
     FakeCas.Server.stop(fake_cas_pid)
 
-    assert {:error, "Failed for unknown reason"} = Server.tgt(pid)
+    assert {:error, "Failed because econnrefused"} = Server.tgt(pid)
   end
 
   test "fails with {:error, _} when username/password is invalid",

@@ -7,9 +7,10 @@ defmodule Cassette.Client.ValidateTicket do
 
   alias Cassette.Config
   alias Cassette.Client
+  alias HTTPoison.Error
   alias HTTPoison.Response
 
-  @type response :: {:ok, String.t()} | {:fail, :unknown}
+  @type response :: {:ok, String.t()} | {:fail, term()}
 
   @doc """
   Do request to cas service to validate a service ticket
@@ -22,6 +23,7 @@ defmodule Cassette.Client.ValidateTicket do
 
     case get(url, headers, options) do
       {:ok, %Response{status_code: 200, body: body}} -> {:ok, body}
+      {:error, %Error{reason: reason}} when is_atom(reason) -> {:fail, reason}
       _ -> {:fail, :unknown}
     end
   end

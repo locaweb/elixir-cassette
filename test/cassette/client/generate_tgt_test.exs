@@ -17,6 +17,12 @@ defmodule Cassette.Client.GenerateTgtTest do
     assert {:error, :bad_credentials} = Cassette.Client.GenerateTgt.perform(config)
   end
 
+  test "perform returns {:fail, reason} for atom error reasons", %{bypass: bypass, config: config} do
+    Bypass.down(bypass)
+
+    assert {:fail, :econnrefused} = Cassette.Client.GenerateTgt.perform(config)
+  end
+
   test "perform returns {:fail, status_code} for other error statuses", %{bypass: bypass, config: config} do
     Bypass.expect bypass, fn conn ->
       conn |> Plug.Conn.resp(404, "not found")

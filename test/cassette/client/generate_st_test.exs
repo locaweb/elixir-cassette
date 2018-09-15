@@ -27,10 +27,10 @@ defmodule Cassette.Client.GenerateStTest do
     assert {:fail, 418, "I. am. a. freaking. teapot."} = Cassette.Client.GenerateSt.perform(config, tgt, service)
   end
 
-  test "perform returns {:fail, :unknown} then http fails", %{bypass: bypass, config: config, tgt: tgt, service: service} do
+  test "perform returns {:fail, reason} then http fails with an atom", %{bypass: bypass, config: config, tgt: tgt, service: service} do
     Bypass.down(bypass)
 
-    assert {:fail, :unknown} = Cassette.Client.GenerateSt.perform(config, tgt, service)
+    assert {:fail, :econnrefused} = Cassette.Client.GenerateSt.perform(config, tgt, service)
   end
 
   test "perform generates a ST", %{bypass: bypass, config: config, tgt: tgt, service: service} do
