@@ -6,7 +6,7 @@ defmodule Cassette.ServerTest do
   alias Server.State
 
   setup do
-    {:ok, [state: %State{config: Cassette.Config.default()}]}
+    {:ok, [state: %State{config: Config.default()}]}
   end
 
   test "server resolves the configuration environment variables on init" do

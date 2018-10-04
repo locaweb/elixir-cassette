@@ -3,9 +3,11 @@ defmodule Cassette.ServerIntegrationTest do
 
   alias Cassette.Server
 
+  alias FakeCas.Support
+
   setup do
-    config = FakeCas.Support.config()
-    {:ok, pid} = Cassette.Server.start_link(config)
+    config = Support.config()
+    {:ok, pid} = Server.start_link(config)
 
     {:ok, [pid: pid, config: config]}
   end

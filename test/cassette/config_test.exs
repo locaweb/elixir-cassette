@@ -20,7 +20,7 @@ defmodule Cassette.ConfigTest do
     {:ok, current_base} = Application.fetch_env(:cassette, :base_url)
     Application.put_env(:cassette, :base_url, {:system, "CASSETTE_BASE"})
 
-    assert "" = Cassette.Config.default().base_url
+    assert "" = Config.default().base_url
 
     Application.put_env(:cassette, :base_url, current_base)
   end

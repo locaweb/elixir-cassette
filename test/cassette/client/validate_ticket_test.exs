@@ -1,12 +1,16 @@
 defmodule Cassette.Client.ValidateTicketTest do
   use ExUnit.Case, async: true
 
+  alias Plug.Conn
   alias Plug.Parsers
+
+  alias Cassette.Client.ValidateTicket
+  alias Cassette.Config
 
   setup do
     bypass = Bypass.open()
     base_url = "http://localhost:#{bypass.port}"
-    config = %{Cassette.Config.default() | base_url: base_url}
+    config = %{Config.default() | base_url: base_url}
     service = "api.example.org"
     ticket = "ST-something"
 
@@ -20,10 +24,10 @@ defmodule Cassette.Client.ValidateTicketTest do
     service: service
   } do
     Bypass.expect(bypass, fn conn ->
-      conn |> Plug.Conn.resp(404, "not found")
+      Conn.resp(conn, 404, "not found")
     end)
 
-    assert {:fail, :unknown} = Cassette.Client.ValidateTicket.perform(config, ticket, service)
+    assert {:fail, :unknown} = ValidateTicket.perform(config, ticket, service)
   end
 
   test "perform returns {:fail, :unknown} then http fails", %{
@@ -34,7 +38,7 @@ defmodule Cassette.Client.ValidateTicketTest do
   } do
     Bypass.down(bypass)
 
-    assert {:fail, :unknown} = Cassette.Client.ValidateTicket.perform(config, ticket, service)
+    assert {:fail, :unknown} = ValidateTicket.perform(config, ticket, service)
   end
 
   test "perform returns the validation body", %{
@@ -53,10 +57,9 @@ defmodule Cassette.Client.ValidateTicketTest do
       assert conn.query_params["ticket"] == ticket
       assert conn.query_params["service"] == service
 
-      conn
-      |> Plug.Conn.resp(200, body)
+      Conn.resp(conn, 200, body)
     end)
 
-    assert {:ok, ^body} = Cassette.Client.ValidateTicket.perform(config, ticket, service)
+    assert {:ok, ^body} = ValidateTicket.perform(config, ticket, service)
   end
 end

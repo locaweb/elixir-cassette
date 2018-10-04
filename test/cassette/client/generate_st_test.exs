@@ -1,12 +1,16 @@
 defmodule Cassette.Client.GenerateStTest do
   use ExUnit.Case, async: true
 
+  alias Plug.Conn
   alias Plug.Parsers
+
+  alias Cassette.Client.GenerateSt
+  alias Cassette.Config
 
   setup do
     bypass = Bypass.open()
     base_url = "http://localhost:#{bypass.port}"
-    config = %{Cassette.Config.default() | base_url: base_url}
+    config = %{Config.default() | base_url: base_url}
     service = "api.example.org"
     tgt = "TGT-something"
 
@@ -20,10 +24,10 @@ defmodule Cassette.Client.GenerateStTest do
     service: service
   } do
     Bypass.expect(bypass, fn conn ->
-      conn |> Plug.Conn.resp(404, "not found")
+      Conn.resp(conn, 404, "not found")
     end)
 
-    assert {:error, :bad_tgt} = Cassette.Client.GenerateSt.perform(config, tgt, service)
+    assert {:error, :bad_tgt} = GenerateSt.perform(config, tgt, service)
   end
 
   test "perform returns {:fail, status_code, body} for other error statuses", %{
@@ -33,11 +37,10 @@ defmodule Cassette.Client.GenerateStTest do
     service: service
   } do
     Bypass.expect(bypass, fn conn ->
-      conn |> Plug.Conn.resp(418, "I. am. a. freaking. teapot.")
+      Conn.resp(conn, 418, "I. am. a. freaking. teapot.")
     end)
 
-    assert {:fail, 418, "I. am. a. freaking. teapot."} =
-             Cassette.Client.GenerateSt.perform(config, tgt, service)
+    assert {:fail, 418, "I. am. a. freaking. teapot."} = GenerateSt.perform(config, tgt, service)
   end
 
   test "perform returns {:fail, :unknown} then http fails", %{
@@ -48,7 +51,7 @@ defmodule Cassette.Client.GenerateStTest do
   } do
     Bypass.down(bypass)
 
-    assert {:fail, :unknown} = Cassette.Client.GenerateSt.perform(config, tgt, service)
+    assert {:fail, :unknown} = GenerateSt.perform(config, tgt, service)
   end
 
   test "perform generates a ST", %{bypass: bypass, config: config, tgt: tgt, service: service} do
@@ -61,10 +64,9 @@ defmodule Cassette.Client.GenerateStTest do
       assert "POST" == conn.method
       assert conn.body_params["service"] == service
 
-      conn
-      |> Plug.Conn.resp(200, st)
+      Conn.resp(conn, 200, st)
     end)
 
-    assert {:ok, ^st} = Cassette.Client.GenerateSt.perform(config, tgt, service)
+    assert {:ok, ^st} = GenerateSt.perform(config, tgt, service)
   end
 end
