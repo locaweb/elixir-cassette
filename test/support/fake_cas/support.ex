@@ -9,17 +9,20 @@ defmodule FakeCas.Support do
   @doc "Starts the server and configure `Cassette` to use it"
   @spec initialize :: :ok
   def initialize do
-    FakeCas.start
+    FakeCas.start()
     configure_cassette()
-    Cassette.reload
+    Cassette.reload()
   end
 
   @doc "Returns a modified `Cassette.Config.t` to use `FakeCas` settings"
-  @spec config :: Cassette.Config.t
+  @spec config :: Cassette.Config.t()
   def config do
-    %{Cassette.Config.default | username: FakeCas.valid_username,
-      password: FakeCas.valid_password,
-      base_url: "http://localhost:#{FakeCas.port}"}
+    %{
+      Cassette.Config.default()
+      | username: FakeCas.valid_username(),
+        password: FakeCas.valid_password(),
+        base_url: "http://localhost:#{FakeCas.port()}"
+    }
   end
 
   @doc "Configures Cassette env using FakeCas settings"
@@ -28,9 +31,9 @@ defmodule FakeCas.Support do
     Application.ensure_all_started(:bypass)
     GenServer.stop(:CassetteServer)
 
-    FakeCas.Support.config
+    FakeCas.Support.config()
     |> Map.delete(:__struct__)
-    |> Enum.each(fn({k, v}) -> Application.put_env(:cassette, k, v) end)
+    |> Enum.each(fn {k, v} -> Application.put_env(:cassette, k, v) end)
 
     :ok
   end
