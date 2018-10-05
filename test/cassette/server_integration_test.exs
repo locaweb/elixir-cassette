@@ -76,7 +76,7 @@ defmodule Cassette.ServerIntegrationTest do
     {:ok, _} = Server.tgt(pid, 6000)
 
     assert {:ok, %Cassette.User{login: "example"}} =
-      Server.validate(pid, FakeCas.valid_st(), config.service(), 6000)
+             Server.validate(pid, FakeCas.valid_st(), config.service(), 6000)
   end
 
   test "validates a st (with cache)", %{pid: pid, config: config} do
