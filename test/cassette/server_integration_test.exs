@@ -48,6 +48,14 @@ defmodule Cassette.ServerIntegrationTest do
     assert {:ok, ^st} = Server.st(pid, FakeCas.valid_tgt, "service")
   end
 
+  test "generates a st from the tgt (with timeout)", %{pid: pid} do
+    st = FakeCas.valid_st()
+    {:ok, tgt} = Server.tgt(pid, 6000)
+    ^tgt = FakeCas.valid_tgt()
+
+    assert {:ok, ^st} = Server.st(pid, FakeCas.valid_tgt(), "service", 6000)
+  end
+
   test "generates a st from the tgt (with cache)", %{pid: pid} do
     st = FakeCas.valid_st
     {:ok, tgt} = Server.tgt(pid)
@@ -62,6 +70,13 @@ defmodule Cassette.ServerIntegrationTest do
 
     assert {:ok, %Cassette.User{login: "example"}} =
       Server.validate(pid, FakeCas.valid_st, config.service)
+  end
+
+  test "validates a st (with timeout)", %{pid: pid, config: config} do
+    {:ok, _} = Server.tgt(pid, 6000)
+
+    assert {:ok, %Cassette.User{login: "example"}} =
+      Server.validate(pid, FakeCas.valid_st(), config.service(), 6000)
   end
 
   test "validates a st (with cache)", %{pid: pid, config: config} do

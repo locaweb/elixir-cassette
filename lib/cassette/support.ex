@@ -134,9 +134,9 @@ defmodule Cassette.Support do
       @doc """
       Generates a Ticket Granting Ticket
       """
-      @spec tgt :: {:ok, String.t()} | {:error, term}
-      def tgt do
-        Server.tgt(@name)
+      @spec tgt(timeout()) :: {:ok, String.t()} | {:error, term}
+      def tgt(timeout \\ 5000) do
+        Server.tgt(@name, timeout)
       end
 
       @doc """
@@ -144,14 +144,14 @@ defmodule Cassette.Support do
 
       This function retries once when the TGT is expired on the server side.
       """
-      @spec st(String.t()) :: {:ok, String.t()} | {:error, term}
-      def st(service) do
+      @spec st(String.t(), timeout()) :: {:ok, String.t()} | {:error, term}
+      def st(service, timeout \\ 5000) do
         {:ok, current_tgt} = tgt()
 
-        case Server.st(@name, current_tgt, service) do
+        case Server.st(@name, current_tgt, service, timeout) do
           {:error, :tgt_expired} ->
             {:ok, new_tgt} = tgt()
-            Server.st(@name, new_tgt, service)
+            Server.st(@name, new_tgt, service, timeout)
 
           reply ->
             reply
@@ -162,9 +162,9 @@ defmodule Cassette.Support do
       Validates a given `ticket` against the given `service` or the service set
       in the configuration
       """
-      @spec validate(String.t(), String.t()) :: {:ok, User.t()} | {:error, term}
-      def validate(ticket, service \\ config().service) do
-        Server.validate(@name, ticket, service)
+      @spec validate(String.t(), String.t(), timeout()) :: {:ok, User.t()} | {:error, term}
+      def validate(ticket, service \\ config().service, timeout \\ 5000) do
+        Server.validate(@name, ticket, service, timeout)
       end
 
       @doc false

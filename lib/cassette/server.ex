@@ -72,30 +72,30 @@ defmodule Cassette.Server do
   @doc """
   Validates a `ticket` for the given `service`
   """
-  @spec validate(GenServer.server(), String.t(), String.t()) ::
+  @spec validate(GenServer.server(), String.t(), String.t(), timeout()) ::
           {:ok, User.t()}
           | {:error, term}
-  def validate(server, ticket, service) do
-    GenServer.call(server, {:validate, ticket, service, time_now()})
+  def validate(server, ticket, service, timeout \\ 5000) do
+    GenServer.call(server, {:validate, ticket, service, time_now()}, timeout)
   end
 
   @doc """
   Generates a Ticket Granting Ticket based on the configuration of the `server`
   """
-  @spec tgt(GenServer.server()) :: {:ok, String.t()} | {:error, term}
-  def tgt(server) do
-    GenServer.call(server, {:tgt, time_now()})
+  @spec tgt(GenServer.server(), timeout()) :: {:ok, String.t()} | {:error, term}
+  def tgt(server, timeout \\ 5000) do
+    GenServer.call(server, {:tgt, time_now()}, timeout)
   end
 
   @doc """
   Generates Service Ticket based on the configuration of the `server` and the
   given `tgt`
   """
-  @spec st(GenServer.server(), String.t(), String.t()) ::
+  @spec st(GenServer.server(), String.t(), String.t(), timeout()) ::
           {:ok, String.t()}
           | {:error, term}
-  def st(server, current_tgt, service) do
-    GenServer.call(server, {:st, current_tgt, service, time_now()})
+  def st(server, current_tgt, service, timeout \\ 5000) do
+    GenServer.call(server, {:st, current_tgt, service, time_now()}, timeout)
   end
 
   @doc """
