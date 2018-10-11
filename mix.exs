@@ -4,20 +4,20 @@ defmodule Cassette.Mixfile do
   def version, do: "1.5.0"
 
   def project do
-    [app: :cassette,
-     version: version(),
-     elixir: "~> 1.2",
-     description: "A CAS client and validation library",
-     elixirc_paths: elixirc_paths(Mix.env),
-     package: package(),
-     docs: [
-       extras: ["README.md", "CONTRIBUTING.md", "LICENSE.md"]
-     ],
-     test_coverage: [tool: ExCoveralls],
-     preferred_cli_env: ["coveralls": :test,
-                         "coveralls.detail": :test,
-                         "coveralls.html": :test],
-     deps: deps()]
+    [
+      app: :cassette,
+      version: version(),
+      elixir: "~> 1.2",
+      description: "A CAS client and validation library",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      package: package(),
+      docs: [
+        extras: ["README.md", "CONTRIBUTING.md", "LICENSE.md"]
+      ],
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.html": :test],
+      deps: deps()
+    ]
   end
 
   def elixirc_paths(:prod), do: ["lib"]
@@ -27,8 +27,7 @@ defmodule Cassette.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison, :sweet_xml],
-     mod: {Cassette, []}]
+    [applications: [:logger, :httpoison, :sweet_xml], mod: {Cassette, []}]
   end
 
   def package do
@@ -36,8 +35,11 @@ defmodule Cassette.Mixfile do
       files: ["lib", "mix.exs", "README.md", "LICENSE.md", "CONTRIBUTING.md"],
       maintainers: ["Ricardo Hermida Ruiz"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/locaweb/elixir-cassette",
-               "Docs" => "https://hexdocs.pm/cassette/#{version()}"}]
+      links: %{
+        "GitHub" => "https://github.com/locaweb/elixir-cassette",
+        "Docs" => "https://hexdocs.pm/cassette/#{version()}"
+      }
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -59,7 +61,7 @@ defmodule Cassette.Mixfile do
       {:credo, "~> 0.3", only: [:dev, :test], runtime: false},
       {:dogma, "~> 0.1", only: [:dev, :test], runtime: false},
       {:fake_cas, "~> 1.1", only: [:dev, :test]},
-      {:excoveralls, "~> 0.7", only: :test},
+      {:excoveralls, "~> 0.7", only: :test}
     ]
   end
 end

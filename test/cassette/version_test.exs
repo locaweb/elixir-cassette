@@ -2,20 +2,23 @@ defmodule Cassette.VersionTest do
   use ExUnit.Case
 
   import Cassette.Version, only: [version: 2]
+  import ExUnit.CaptureIO, only: [capture_io: 2]
 
   require Cassette.Version
 
   test "it does not emit compiler warnings in the branch not executed" do
-    output = ExUnit.CaptureIO.capture_io :stderr, fn ->
-      {_code, []} = Code.eval_string """
-        require Cassette.Version
-        Cassette.Version.version(">= 1.2.0") do
-          %{}
-        else
-          HashDict.new()
-        end
-      """
-    end
+    output =
+      capture_io(:stderr, fn ->
+        {_code, []} =
+          Code.eval_string("""
+            require Cassette.Version
+            Cassette.Version.version(">= 1.2.0") do
+              %{}
+            else
+              HashDict.new()
+            end
+          """)
+      end)
 
     refute output =~ "deprecated"
   end

@@ -1,6 +1,6 @@
 language: elixir
-elixir: '1.5.1'
-otp_release: '20.0'
+elixir: '1.7.3'
+otp_release: '21.1'
 env:
   - MIX_ENV=test
 
@@ -29,3 +29,12 @@ matrix:
 
     - elixir: '1.5.1'
       otp_release: '19.3.6'
+
+    - elixir: '1.6.6'
+      otp_release: '19.3.6'
+
+    - elixir: '1.6.6'
+      otp_release: '20.3.6'
+
+    - elixir: '1.7.3'
+      otp_release: '20.3.6'

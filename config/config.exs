@@ -8,4 +8,4 @@ config :cassette, base_url: "https://cas.example.org"
 config :cassette, base_authority: "EXAMPLE"
 config :cassette, service: "app.example.org"
 
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
