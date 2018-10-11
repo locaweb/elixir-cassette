@@ -5,8 +5,8 @@ defmodule Cassette.Client.GenerateTgt do
 
   use HTTPoison.Base
 
-  alias Cassette.Config
   alias Cassette.Client
+  alias Cassette.Config
   alias HTTPoison.Response
 
   @type response ::

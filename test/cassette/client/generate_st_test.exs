@@ -1,6 +1,8 @@
 defmodule Cassette.Client.GenerateStTest do
   use ExUnit.Case, async: true
 
+  alias Plug.Parsers
+
   setup do
     bypass = Bypass.open
     base_url = "http://localhost:#{bypass.port}"
@@ -37,7 +39,7 @@ defmodule Cassette.Client.GenerateStTest do
     st = "ST-some-service"
 
     Bypass.expect bypass, fn c ->
-      conn = Plug.Parsers.call(c, [parsers: [Plug.Parsers.URLENCODED]])
+      conn = Parsers.call(c, Parsers.init(parsers: [:urlencoded]))
 
       assert "/v1/tickets/#{tgt}" == conn.request_path
       assert "POST" == conn.method

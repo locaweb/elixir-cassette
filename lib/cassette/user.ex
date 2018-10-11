@@ -3,8 +3,8 @@ defmodule Cassette.User do
   This is the struct that represents the user returned by a Validation request
   """
 
-  alias Cassette.User
   alias Cassette.Config
+  alias Cassette.User
 
   defstruct login: "", type: "", attributes: %{}, authorities: MapSet.new([])
 

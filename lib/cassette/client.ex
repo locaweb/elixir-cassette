@@ -6,9 +6,9 @@ defmodule Cassette.Client do
   Also provides helpers for the default options for the client
   """
 
-  alias Cassette.Config
   alias Cassette.Client.GenerateSt
   alias Cassette.Client.GenerateTgt
+  alias Cassette.Config
 
   @doc """
   Generates a ticket granting ticket given the config

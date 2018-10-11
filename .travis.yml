@@ -6,15 +6,17 @@ env:
 
 script:
   - mix coveralls.html
-  - mix credo --strict
+  - '[[ -n "$LEGACY_ELIXIR" ]] || mix credo --strict'
 
 matrix:
   include:
     - elixir: '1.3.4'
       otp_release: '18.3'
+      env: LEGACY_ELIXIR=1
 
     - elixir: '1.3.4'
       otp_release: '19.3.6'
+      env: LEGACY_ELIXIR=1
 
     - elixir: '1.4.5'
       otp_release: '18.3'

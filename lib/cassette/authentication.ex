@@ -54,8 +54,7 @@ defmodule Cassette.Authentication do
       all_attributes =
         xml
         |> xpath(~x"#{attributes_path}/*"l, mapping)
-        |> Enum.map(fn attr -> {attr.name, attr.value} end)
-        |> Enum.into(%{})
+        |> Enum.into(%{}, fn attr -> {attr.name, attr.value} end)
 
       {special, attributes} = Map.split(all_attributes, ["authorities", "type"])
 

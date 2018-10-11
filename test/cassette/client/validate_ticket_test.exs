@@ -1,6 +1,8 @@
 defmodule Cassette.Client.ValidateTicketTest do
   use ExUnit.Case, async: true
 
+  alias Plug.Parsers
+
   setup do
     bypass = Bypass.open
     base_url = "http://localhost:#{bypass.port}"
@@ -29,7 +31,7 @@ defmodule Cassette.Client.ValidateTicketTest do
     body = "<validation><result><xml /></result></validation>"
 
     Bypass.expect bypass, fn c ->
-      conn = Plug.Parsers.call(c, [parsers: [Plug.Parsers.URLENCODED]])
+      conn = Parsers.call(c, Parsers.init(parsers: [:urlencoded]))
 
       assert "/serviceValidate" == conn.request_path
       assert "GET" == conn.method

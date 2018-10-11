@@ -5,8 +5,8 @@ defmodule Cassette.Client.GenerateSt do
 
   use HTTPoison.Base
 
-  alias Cassette.Config
   alias Cassette.Client
+  alias Cassette.Config
 
   @type response ::
           {:error, :bad_tgt}

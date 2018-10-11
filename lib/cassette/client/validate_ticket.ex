@@ -5,8 +5,8 @@ defmodule Cassette.Client.ValidateTicket do
 
   use HTTPoison.Base
 
-  alias Cassette.Config
   alias Cassette.Client
+  alias Cassette.Config
   alias HTTPoison.Response
 
   @type response :: {:ok, String.t()} | {:fail, :unknown}

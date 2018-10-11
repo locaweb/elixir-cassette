@@ -124,7 +124,9 @@ defmodule Cassette.Config do
       end
     end
 
-    config |> Map.keys() |> Enum.map(env_or_default.(config)) |> Enum.into(%{})
+    config
+    |> Map.keys()
+    |> Enum.into(%{}, env_or_default.(config))
   end
 
   def resolve(nil), do: default()
