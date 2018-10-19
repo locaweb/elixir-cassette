@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## UNRELEASED
+### Fixed
+- Name response type to result to avoid clash with `HTTPoison.Base` defined type
+
 ## [1.5.0] - 2018-10-11
 ### Added
 - Add `timeout` param to `Cassette.st`, `Cassette.tgt` and `Cassette.validate`

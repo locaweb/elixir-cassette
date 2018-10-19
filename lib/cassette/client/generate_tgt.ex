@@ -9,7 +9,7 @@ defmodule Cassette.Client.GenerateTgt do
   alias Cassette.Config
   alias HTTPoison.Response
 
-  @type response ::
+  @type result ::
           {:error, :bad_credentials}
           | {:ok, String.t()}
           | {:fail, pos_integer()}
@@ -25,7 +25,7 @@ defmodule Cassette.Client.GenerateTgt do
   @doc """
   Do request to cas service to get a ticket granting tickets from user
   """
-  @spec perform(Config.t()) :: response
+  @spec perform(Config.t()) :: result
   def perform(config = %Config{username: username, password: password, base_url: base_url}) do
     form_data = {:form, [username: username, password: password]}
     url = "#{base_url}/v1/tickets"

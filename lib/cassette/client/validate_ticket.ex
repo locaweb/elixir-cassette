@@ -9,12 +9,12 @@ defmodule Cassette.Client.ValidateTicket do
   alias Cassette.Config
   alias HTTPoison.Response
 
-  @type response :: {:ok, String.t()} | {:fail, :unknown}
+  @type result :: {:ok, String.t()} | {:fail, :unknown}
 
   @doc """
   Do request to cas service to validate a service ticket
   """
-  @spec perform(Config.t(), String.t(), String.t()) :: response
+  @spec perform(Config.t(), String.t(), String.t()) :: result
   def perform(config = %Config{base_url: base_url}, ticket, service) do
     url = "#{base_url}/serviceValidate"
     headers = []
