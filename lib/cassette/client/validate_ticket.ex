@@ -18,7 +18,7 @@ defmodule Cassette.Client.ValidateTicket do
   def perform(config = %Config{base_url: base_url}, ticket, service) do
     url = "#{base_url}/serviceValidate"
     headers = []
-    options = options([params: [service: service, ticket: ticket]], config)
+    options = opts([params: [service: service, ticket: ticket]], config)
 
     case get(url, headers, options) do
       {:ok, %Response{status_code: 200, body: body}} -> {:ok, body}
@@ -26,7 +26,7 @@ defmodule Cassette.Client.ValidateTicket do
     end
   end
 
-  defp options(base, config) do
+  defp opts(base, config) do
     Keyword.merge(base, Client.options(config))
   end
 end
