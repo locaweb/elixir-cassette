@@ -9,16 +9,16 @@ defmodule Cassette.Client.ValidateTicket do
   alias Cassette.Config
   alias HTTPoison.Response
 
-  @type response :: {:ok, String.t()} | {:fail, :unknown}
+  @type result :: {:ok, String.t()} | {:fail, :unknown}
 
   @doc """
   Do request to cas service to validate a service ticket
   """
-  @spec perform(Config.t(), String.t(), String.t()) :: response
+  @spec perform(Config.t(), String.t(), String.t()) :: result
   def perform(config = %Config{base_url: base_url}, ticket, service) do
     url = "#{base_url}/serviceValidate"
     headers = []
-    options = options([params: [service: service, ticket: ticket]], config)
+    options = opts([params: [service: service, ticket: ticket]], config)
 
     case get(url, headers, options) do
       {:ok, %Response{status_code: 200, body: body}} -> {:ok, body}
@@ -26,7 +26,7 @@ defmodule Cassette.Client.ValidateTicket do
     end
   end
 
-  defp options(base, config) do
+  defp opts(base, config) do
     Keyword.merge(base, Client.options(config))
   end
 end
