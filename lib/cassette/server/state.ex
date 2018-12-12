@@ -18,13 +18,21 @@ defmodule Cassette.Server.State do
           validations: %{{String.t(), String.t()} => validation}
         }
 
-  @spec put_validation(t, String.t(), {non_neg_integer, User.t() | nil}) :: t
+  @spec put_validation(t, {String.t(), String.t()}, {non_neg_integer, User.t() | nil}) :: t
   @doc """
   Updates the validation cache for the given `{service, ticket}` pair with the
   returned user
   """
   def put_validation(state, {service, ticket}, {user, expires_at}) do
     %{state | validations: Map.put(state.validations, {service, ticket}, {user, expires_at})}
+  end
+
+  @spec delete_validation(t, {String.t(), String.t()}) :: t
+  @doc """
+  Removes the given `{service, ticket}` pair from the state
+  """
+  def delete_validation(state, {service, ticket}) do
+    %{state | validations: Map.delete(state.validations, {service, ticket})}
   end
 
   @doc """
