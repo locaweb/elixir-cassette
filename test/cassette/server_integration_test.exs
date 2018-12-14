@@ -2,6 +2,7 @@ defmodule Cassette.ServerIntegrationTest do
   use ExUnit.Case, async: true
 
   alias Cassette.Server
+  alias Cassette.Server.State
 
   alias FakeCas.Support
 
@@ -19,6 +20,18 @@ defmodule Cassette.ServerIntegrationTest do
   test "generates a correct tgt", %{pid: pid} do
     tgt = FakeCas.valid_tgt()
     assert {:ok, ^tgt} = Server.tgt(pid)
+  end
+
+  test "expiring a validation removes it from the cache",
+       %{pid: pid, config: config} do
+    config = Map.put(config, :validation_ttl, 1 / 1000)
+    :ok = Server.reload(pid, config)
+
+    Server.validate(pid, FakeCas.valid_st(), config.service)
+    Process.sleep(10)
+
+    assert %State{validations: validations} = :sys.get_state(pid)
+    assert validations == %{}
   end
 
   test "fails with unknown reason when cas is down",

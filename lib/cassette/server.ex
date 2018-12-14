@@ -132,7 +132,15 @@ defmodule Cassette.Server do
     cached_value = Map.get(validations, {service, ticket})
 
     case evaluate_validation(config, service, ticket, cached_value, now) do
-      {:ok, user, expires_at} ->
+      {:ok, user, expires_at, new} ->
+        if new do
+          Process.send_after(
+            self(),
+            {:expire, :validation, {service, ticket}},
+            trunc(config.validation_ttl * 1000)
+          )
+        end
+
         new_state = State.put_validation(state, {service, ticket}, {user, expires_at})
         {:reply, {:ok, user}, new_state}
 
@@ -192,15 +200,19 @@ defmodule Cassette.Server do
     {:reply, :ok, state}
   end
 
-  @spec evaluate_validation(Config.t(), String.t(), String.t(), State.st(), non_neg_integer()) ::
-          {:ok, User.t(), non_neg_integer()}
-  defp evaluate_validation(_, _, _, {user, expires_at}, now)
-       when now < expires_at do
-    {:ok, user, expires_at}
+  def handle_info({:expire, :validation, key}, state) do
+    state = State.delete_validation(state, key)
+    {:noreply, state}
   end
 
   @spec evaluate_validation(Config.t(), String.t(), String.t(), State.st(), non_neg_integer()) ::
-          {:ok, User.t(), non_neg_integer()} | {:error, term}
+          {:ok, User.t(), non_neg_integer(), boolean()} | {:error, term}
+
+  defp evaluate_validation(_, _, _, {user, expires_at}, now)
+       when now < expires_at do
+    {:ok, user, expires_at, false}
+  end
+
   defp evaluate_validation(config, service, ticket, _, _) do
     reply =
       case ValidateTicket.perform(config, ticket, service) do
@@ -209,8 +221,11 @@ defmodule Cassette.Server do
       end
 
     case reply do
-      {:ok, user} -> {:ok, user, time_now() + config.validation_ttl}
-      reply -> reply
+      {:ok, user} ->
+        {:ok, user, time_now() + config.validation_ttl, true}
+
+      reply ->
+        reply
     end
   end
 

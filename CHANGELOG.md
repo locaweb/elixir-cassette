@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [UNRELEASED]
+### Added
+- Automatically expire validations with `Process.send_after/3`
+
 ## [1.5.1] = 2018-10-19
 ### Fixed
 - Name response type to result to avoid clash with `HTTPoison.Base` defined type
