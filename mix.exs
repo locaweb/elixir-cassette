@@ -57,9 +57,8 @@ defmodule Cassette.Mixfile do
       {:sweet_xml, "~> 0.6.0"},
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 1.0", only: :dev},
-      {:bypass, "~> 0.1", only: [:dev, :test]},
-      {:credo, "~> 0.3", only: [:dev, :test], runtime: false},
-      {:dogma, "~> 0.1", only: [:dev, :test], runtime: false},
+      {:bypass, "~> 1.0", only: [:dev, :test]},
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:fake_cas, "~> 1.1", only: [:dev, :test]},
       {:excoveralls, "~> 0.7", only: :test}
     ]

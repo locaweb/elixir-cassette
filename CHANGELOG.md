@@ -6,6 +6,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Automatically expire validations with `Process.send_after/3`
 
+### Changed
+- Upgraded deps
+- Revert credo configuration to default
+
+### Removed
+- Removed dogma tool (it's deprecated)
+
 ## [1.5.1] = 2018-10-19
 ### Fixed
 - Name response type to result to avoid clash with `HTTPoison.Base` defined type
