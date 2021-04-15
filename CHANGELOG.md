@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
+### Fixed
+- Added `timeout` param to `Cassette.st` when `tgt` is expired
+
 ### Added
 - Automatically expire validations with `Process.send_after/3`
 

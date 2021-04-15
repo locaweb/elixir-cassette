@@ -146,11 +146,11 @@ defmodule Cassette.Support do
       """
       @spec st(String.t(), timeout()) :: {:ok, String.t()} | {:error, term}
       def st(service, timeout \\ 5000) do
-        {:ok, current_tgt} = tgt()
+        {:ok, current_tgt} = tgt(timeout)
 
         case Server.st(@name, current_tgt, service, timeout) do
           {:error, :tgt_expired} ->
-            {:ok, new_tgt} = tgt()
+            {:ok, new_tgt} = tgt(timeout)
             Server.st(@name, new_tgt, service, timeout)
 
           reply ->
