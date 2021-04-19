@@ -15,6 +15,7 @@ defmodule Cassette.Server do
   alias Cassette.User
 
   require Cassette.Version
+  require Logger
 
   @typep tgt_request :: {:tgt, non_neg_integer()}
 
@@ -202,6 +203,11 @@ defmodule Cassette.Server do
 
   def handle_info({:expire, :validation, key}, state) do
     state = State.delete_validation(state, key)
+    {:noreply, state}
+  end
+
+  def handle_info(msg, state) do
+    Logger.error("Unexpected message: #{inspect(msg)}")
     {:noreply, state}
   end
 
