@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
+### Fixed
+- Added `handle_info` as a `catch-all` clause that discards any unknown message.
 
 ## [1.5.1] = 2021-04-15
 ### Fixed
