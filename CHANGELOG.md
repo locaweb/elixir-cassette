@@ -3,10 +3,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
+
+## [1.5.3] - 2021-04-220
 ### Fixed
 - Added `handle_info` as a `catch-all` clause that discards any unknown message.
 
-## [1.5.1] = 2021-04-15
+## [1.5.2] - 2021-04-15
 ### Fixed
 - Added `timeout` param to `Cassette.st` when `tgt` is expired
 
@@ -20,7 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - Removed dogma tool (it's deprecated)
 
-## [1.5.1] = 2018-10-19
+## [1.5.1] - 2018-10-19
 ### Fixed
 - Name response type to result to avoid clash with `HTTPoison.Base` defined type
 
