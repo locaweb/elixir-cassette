@@ -1,6 +1,8 @@
 defmodule Cassette.Mixfile do
   use Mix.Project
 
+  @elixir_version Version.parse!(System.version())
+
   def version, do: "1.5.3"
 
   def project do
@@ -42,6 +44,9 @@ defmodule Cassette.Mixfile do
     ]
   end
 
+  @elixir_version Version.parse!(System.version())
+  @min_version_for_credo Version.parse!("1.7.0")
+
   # Dependencies can be Hex packages:
   #
   #   {:mydep, "~> 0.3.0"}
@@ -58,9 +63,15 @@ defmodule Cassette.Mixfile do
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 1.0", only: :dev},
       {:bypass, "~> 1.0", only: [:dev, :test]},
-      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:fake_cas, "~> 1.1", only: [:dev, :test]},
       {:excoveralls, "~> 0.7", only: :test}
     ]
+    |> (fn deps ->
+          if Version.compare(@elixir_version, @min_version_for_credo) in [:gt, :eq] do
+            [{:credo, "~> 1.0", only: [:dev, :test], runtime: false} | deps]
+          else
+            deps
+          end
+        end).()
   end
 end
