@@ -29,7 +29,9 @@ defmodule Cassette.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison, :sweet_xml], mod: {Cassette, []}]
+    [
+      extra_applications: [:logger, :sweet_xml]
+    ]
   end
 
   def package do
