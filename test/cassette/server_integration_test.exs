@@ -7,6 +7,12 @@ defmodule Cassette.ServerIntegrationTest do
   alias FakeCas.Support
 
   setup do
+    {:ok, _pid} =
+      start_supervised(%{
+        id: FakeCas,
+        start: {FakeCas, :start_link, []}
+      })
+
     config = Support.config()
     {:ok, pid} = Server.start_link(config)
 

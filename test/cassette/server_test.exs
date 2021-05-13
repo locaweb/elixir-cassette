@@ -1,11 +1,12 @@
 defmodule Cassette.ServerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias Cassette.Config
   alias Cassette.Server
   alias Server.State
 
   setup do
+    {:ok, _pid} = start_supervised(Cassette)
     {:ok, [state: %State{config: Config.default()}]}
   end
 
