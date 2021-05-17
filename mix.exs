@@ -2,6 +2,7 @@ defmodule Cassette.Mixfile do
   use Mix.Project
 
   @elixir_version Version.parse!(System.version())
+  @min_version_for_credo Version.parse!("1.7.0")
 
   def version, do: "1.5.3"
 
@@ -45,9 +46,6 @@ defmodule Cassette.Mixfile do
       }
     ]
   end
-
-  @elixir_version Version.parse!(System.version())
-  @min_version_for_credo Version.parse!("1.7.0")
 
   # Dependencies can be Hex packages:
   #
