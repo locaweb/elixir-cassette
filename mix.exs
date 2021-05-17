@@ -67,6 +67,8 @@ defmodule Cassette.Mixfile do
       {:excoveralls, "~> 0.7", only: :test}
     ]
     |> (fn deps ->
+          # credo requires Elixir 1.7+, having it on older versions (CI) breaks compilation
+          # this can be removed when all versions on test matrix support credo
           if Version.compare(@elixir_version, @min_version_for_credo) in [:gt, :eq] do
             [{:credo, "~> 1.0", only: [:dev, :test], runtime: false} | deps]
           else
