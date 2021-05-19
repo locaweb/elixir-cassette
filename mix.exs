@@ -1,6 +1,9 @@
 defmodule Cassette.Mixfile do
   use Mix.Project
 
+  @elixir_version Version.parse!(System.version())
+  @min_version_for_credo Version.parse!("1.7.0")
+
   def version, do: "1.5.3"
 
   def project do
@@ -27,7 +30,9 @@ defmodule Cassette.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison, :sweet_xml], mod: {Cassette, []}]
+    [
+      extra_applications: [:logger, :sweet_xml]
+    ]
   end
 
   def package do
@@ -58,9 +63,17 @@ defmodule Cassette.Mixfile do
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 1.0", only: :dev},
       {:bypass, "~> 1.0", only: [:dev, :test]},
-      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:fake_cas, "~> 1.1", only: [:dev, :test]},
       {:excoveralls, "~> 0.7", only: :test}
     ]
+    |> (fn deps ->
+          # credo requires Elixir 1.7+, having it on older versions (CI) breaks compilation
+          # this can be removed when all versions on test matrix support credo
+          if Version.compare(@elixir_version, @min_version_for_credo) in [:gt, :eq] do
+            [{:credo, "~> 1.0", only: [:dev, :test], runtime: false} | deps]
+          else
+            deps
+          end
+        end).()
   end
 end

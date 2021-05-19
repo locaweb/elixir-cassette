@@ -1,0 +1,88 @@
+name: Test and quality
+
+on:
+  push:
+
+jobs:
+  test:
+    env:
+      MIX_ENV: test
+
+    runs-on: ${{matrix.os}}
+    name: Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}} / OS ${{matrix.os}}
+    strategy:
+      matrix:
+        include:
+          - elixir: '1.5'
+            otp: '19.3'
+            os: 'ubuntu-18.04'
+
+          - elixir: '1.6'
+            otp: '19.3'
+            os: 'ubuntu-18.04'
+
+          - elixir: '1.6'
+            otp: '20.3'
+            os: 'ubuntu-20.04'
+
+          - elixir: '1.7'
+            otp: '20.3'
+            os: 'ubuntu-20.04'
+
+          - elixir: '1.8'
+            otp: '21.3'
+            os: 'ubuntu-20.04'
+
+          - elixir: '1.8'
+            otp: '22.3'
+            os: 'ubuntu-20.04'
+
+          - elixir: '1.9'
+            otp: '22.3'
+            os: 'ubuntu-20.04'
+
+          - elixir: '1.10'
+            otp: '23.3'
+            os: 'ubuntu-20.04'
+
+          - elixir: '1.11'
+            otp: '23.3'
+            os: 'ubuntu-20.04'
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      - uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-${{ matrix.otp }}
+
+      - run: mix deps.get
+      - run: mix coveralls
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '23.3'
+          elixir-version: '1.11'
+      - uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+
+      - run: mix deps.get
+      - run: mix format --check-formatted
+      - run: mix credo --strict
