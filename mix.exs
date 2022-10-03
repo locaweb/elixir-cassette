@@ -31,7 +31,9 @@ defmodule Cassette.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      extra_applications: [:logger, :sweet_xml]
+      extra_applications:
+        [:logger, :sweet_xml]
+        |> (&if(Mix.env() == :test, do: [:plug_cowboy | &1], else: &1)).()
     ]
   end
 
